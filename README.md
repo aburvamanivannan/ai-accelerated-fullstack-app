@@ -1,3 +1,29 @@
+
+**How to Run the Application (Local Setup)**
+**Prerequisites**
+	Make sure you have the following installed:
+		Node.js (v18+ recommended)
+		npm
+		Java 17+ 
+		Maven
+		
+**Start Frontend (UI – Next.js)**
+	1: Navigate to UI folder
+		cd .../event-booking-app/frontend/event-app
+	2: Install dependencies (first time only)
+		npm install
+	3: Start UI server
+		npm run dev
+	4: Access UI
+		Open browser and go to: http://localhost:3000
+
+**Start Backend (Spring Boot)**
+	ClassName : EventAppApplication.java
+	(From any IDE) Right click → Run as Java Application
+	Backend starts in - http://localhost:8080	
+
+####################################################################################################
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
