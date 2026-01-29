@@ -1,26 +1,98 @@
 
-**How to Run the Application (Local Setup)**
-**Prerequisites**
-	Make sure you have the following installed:
-		Node.js (v18+ recommended)
-		npm
-		Java 17+ 
-		Maven
-		
-**Start Frontend (UI – Next.js)**
-	1: Navigate to UI folder
-		cd .../event-booking-app/frontend/event-app
-	2: Install dependencies (first time only)
-		npm install
-	3: Start UI server
-		npm run dev
-	4: Access UI
-		Open browser and go to: http://localhost:3000
 
-**Start Backend (Spring Boot)**
-	ClassName : EventAppApplication.java
-	(From any IDE) Right click → Run as Java Application
-	Backend starts in - http://localhost:8080	
+**Architecture Pattern**
+3-Tier Architecture: Frontend → Backend API → Database
+RESTful API communication between frontend and backend
+JWT-based Authentication with role-based access control (RBAC)
+Tech Stack Breakdown
+
+**Frontend**
+Framework: Next.js 16.1.3 (React 19.2.3)
+Language: TypeScript 5
+Styling: Tailwind CSS 4
+Fonts: Geist Sans & Geist Mono (via next/font)
+State Management: Local Storage (for JWT tokens)
+HTTP Client: Native Fetch API
+Port: 3000 (default Next.js dev server)
+
+**Backend**
+Framework: Spring Boot 4.0.1
+Language: Java 17
+Build Tool: Maven
+Security: Spring Security with JWT authentication
+ORM: Spring Data JPA / Hibernate
+Database Dialect: Hibernate Community Dialects (SQLite)
+JWT Library: JJWT 0.12.5 (io.jsonwebtoken)
+Port: 8080
+
+**Database**
+Database: SQLite
+Database File: event_booking.db
+ORM: JPA/Hibernate with auto-update DDL (spring.jpa.hibernate.ddl-auto=update)
+
+
+**Authentication Flow**
+User logs in via POST /auth/login
+Backend validates credentials and returns JWT token
+Frontend stores token in localStorage
+All subsequent requests include Authorization: Bearer <token> header
+JWT Filter validates token on each request
+
+**User Roles**
+USER: Can create events, view own events
+ADMIN: Can view all events, approve/reject pending events
+
+**Event Lifecycle**
+PENDING → APPROVED       ↘ REJECTED
+
+**API Endpoints**
+**Authentication**
+POST /auth/login - Login (public)
+POST /auth/signup - Signup (public)
+
+**User Endpoints (requires USER/ADMIN role)**
+POST /events - Create event
+GET /events/mine - Get user's own events
+
+**Admin Endpoints (requires ADMIN role)**
+GET /admin/events?status=PENDING - Get all events (filterable)
+POST /admin/events/{eventId}/approve - Approve event
+POST /admin/events/{eventId}/reject - Reject event
+
+
+**Database Schema**
+
+**T_USER Table**
+user_id (PK, String)
+password_hash (String)
+user_type (ENUM: USER/ADMIN)
+created_at (LocalDateTime)
+
+
+**T_EVENT Table**
+event_id (PK, Long, Auto-generated)
+event_name (String)
+created_by (FK → T_USER.user_id)
+approved_by (FK → T_USER.user_id, nullable)
+status (ENUM: PENDING/APPROVED/REJECTED)
+evet_date (LocalDate) - Note: typo in column name
+created_date (LocalDateTime)
+decision_date (LocalDateTime, nullable)
+rejection_reason (String, nullable)
+
+**Security Features**
+JWT Authentication: Stateless token-based auth
+Role-Based Access Control: USER vs ADMIN permissions
+Password Hashing: Passwords stored as hashes (not plain text)
+CORS Configuration: Configured for cross-origin requests
+CSRF Protection: Disabled (typical for JWT stateless APIs)
+
+
+**Development Setup**
+Frontend: npm run dev → http://localhost:3000
+Backend: Spring Boot Maven app → http://localhost:8080
+Database: SQLite file created automatically on first run
+This is a full-stack event booking application with a modern React frontend and a Spring Boot REST API backend, using JWT for authentication and SQLite for data persistence.	
 
 ####################################################################################################
 
